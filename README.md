@@ -4,6 +4,16 @@ Unofficial AppImages built on top of the official portable builds (Stable, ESR, 
 The AppImages are created by extracting the official archives, with the only addition of a .desktop file, an icon and an AppRun (three essential elements for an AppImage).
 
 ------------------------------------------------------------------------
+# Alternative repository
+This repository was inspired by https://github.com/srevinsaju/Firefox-Appimage and it was conceived as a continuation of that work with the adoption of a more recent AppImage runtime with no dependency on `libfuse2`, a simpler, more compact, flexible and intuitive build scheme, so as to facilitate the improvement of the forks, if you will want to create one.
+
+The AppImages from the "historic" repository of srevinsaju can be installed in "AM" using the `-e` option, or by downloading the existing script and changing `ivan-hc/Firefox-appimage` with `srevinsaju/Firefox-Appimage` and then installing the local scripts with `-i`, dragging them into the terminal.
+
+Their replacement in "AM" with my AppImages are intended to innovate the AppImage format with new technologies, ensuring the continuity that the author of the other repository said he could not guarantee due to too many commitments that keep him away from github.
+
+I hope you can appreciate my work and my commitment to this project.
+
+------------------------------------------------------------------------
 
 ## Install and update it with ease
 
