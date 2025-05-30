@@ -135,7 +135,7 @@ X-MultipleArgs=false
 Type=Application
 MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;application/x-xpinstall;application/pdf;application/json;
 StartupNotify=true
-StartupWMClass=Firefox
+StartupWMClass=firefox
 Categories=Network;WebBrowser;
 Actions=new-window;new-private-window;
 
@@ -385,7 +385,7 @@ _create_firefox_appimage() {
 	# Add the launcher and patch it depending on the release channel
 	echo "$LAUNCHER" > firefox.desktop
 	if [ "$CHANNEL" != stable ]; then
-		sed -i "s/Name=Firefox/Name=Firefox ${CHANNEL^}/g; s/StartupWMClass=Firefox/StartupWMClass=Firefox-$CHANNEL/g" firefox.desktop
+		sed -i "s/Name=Firefox/Name=Firefox ${CHANNEL^}/g; s/StartupWMClass=firefox/StartupWMClass=firefox-$CHANNEL/g" firefox.desktop
 	fi
 	# Add the icon
 	cp ./browser/chrome/icons/default/default128.png firefox.png
