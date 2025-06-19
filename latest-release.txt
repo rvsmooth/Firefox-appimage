@@ -1,5 +1,1 @@
-https://github.com/ivan-hc/Firefox-appimage/releases/download/continuous-stable/Firefox-stable-139.0.4-x86_64.AppImage
-https://github.com/ivan-hc/Firefox-appimage/releases/download/continuous-nightly/Firefox-nightly-141.0a1-x86_64.AppImage
-https://github.com/ivan-hc/Firefox-appimage/releases/download/continuous-esr/Firefox-esr-128.11.0-x86_64.AppImage
-https://github.com/ivan-hc/Firefox-appimage/releases/download/continuous-devedition/Firefox-devedition-140.0-x86_64.AppImage
-https://github.com/ivan-hc/Firefox-appimage/releases/download/continuous-beta/Firefox-beta-140.0-x86_64.AppImage
+https://github.com/rvsmooth/Firefox-appimage/releases/download/continuous-stable/Firefox-stable-139.0.4-x86_64.AppImage
