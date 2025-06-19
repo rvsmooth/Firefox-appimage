@@ -348,10 +348,12 @@ Exec=/home/$(whoami)/.local/bin/firefox --private-window %u"
 __check_if_installed() {
   if command -v firefox >/dev/null 2>&1; then
     is_installed="0"
+    echo "Firefox is already installed"
     LOCAL_VERSION=$(firefox --version | awk -F ' ' '{print $NF}')
-
   else
     is_installed="1"
+    echo "Firefox is not installed"
+    echo "Doing installation"
   fi
 }
 
@@ -367,9 +369,9 @@ __compare_v() {
   echo "upstream version is $version1"
   if [[ $(echo -e "$version1\n$version2" | sort -V | head -n1) == "$version1" && "$version1" != "$version2" ]]; then
     echo "upstream $version1 is less than $version2"
-    echo "nothing to do"
   elif [[ $version1 == $version2 ]]; then
     echo "$version1 = $version2"
+    echo "Nothing to do"
     upgrade="1"
   else
     echo "$version1 is greater than $version2"
@@ -409,4 +411,5 @@ __install() {
 }
 
 __check_if_installed
+__check_version
 __install
