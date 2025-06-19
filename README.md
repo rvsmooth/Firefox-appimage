@@ -6,5 +6,5 @@ The AppImages are created by extracting the official archives, with the only add
 ### Installation
 To install or upgrade, simply run
 ```
-curl -fsSL https://raw.githubusercontent.com/rvsmooth/Firefox-appimage/refs/heads/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Ravi-Kishor/Firefox-appimage/refs/heads/main/install.sh | bash
 ```
