@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
-
+set -x
 APP=firefox
-
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_DIR="$SCRIPT_DIR/configs"
 # TEMPORARY DIRECTORY
 mkdir -p tmp
 cd ./tmp || exit 1
 
 # DOWNLOAD APPIMAGETOOL
 if ! test -f ./appimagetool; then
-	wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool || exit 1
-	chmod a+x ./appimagetool
+  wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool || exit 1
+  chmod a+x ./appimagetool
 fi
 
 # CREATE FIREFOX BROWSER APPIMAGES
@@ -363,39 +364,43 @@ POLICIES='{
 }'
 
 _create_firefox_appimage() {
-	# Detect the channel
-	if [ "$CHANNEL" != stable ]; then
-		DOWNLOAD_URL="https://download.mozilla.org/?product=$APP-$CHANNEL-latest&os=linux64"
-	else
-		DOWNLOAD_URL="https://download.mozilla.org/?product=$APP-latest&os=linux64"
-	fi
-	# Download with wget or wget2
-	if wget --version | head -1 | grep -q ' 1.'; then
-		wget -q --no-verbose --show-progress --progress=bar "$DOWNLOAD_URL" --trust-server-names || exit 1
-	else
-		wget "$DOWNLOAD_URL" --trust-server-names || exit 1
-	fi
-	# Disable automatic updates
-	mkdir -p "$APP".AppDir/distribution
-	echo "$POLICIES" > "$APP".AppDir/distribution/policies.json
-	# Extract the archive
-	[ -e ./*tar.* ] && tar fx ./*tar.* && mv ./firefox/* "$APP".AppDir/ && rm -f ./*tar.* || exit 1
-	# Enter the AppDir
-	cd "$APP".AppDir || exit 1
-	# Add the launcher and patch it depending on the release channel
-	echo "$LAUNCHER" > firefox.desktop
-	if [ "$CHANNEL" != stable ]; then
-		sed -i "s/Name=Firefox/Name=Firefox ${CHANNEL^}/g; s/StartupWMClass=firefox/StartupWMClass=firefox-$CHANNEL/g" firefox.desktop
-	fi
-	# Add the icon
-	cp ./browser/chrome/icons/default/default128.png firefox.png
-	cd .. || exit 1
+  # Detect the channel
+  if [ "$CHANNEL" != stable ]; then
+    DOWNLOAD_URL="https://download.mozilla.org/?product=$APP-$CHANNEL-latest&os=linux64"
+  else
+    DOWNLOAD_URL="https://download.mozilla.org/?product=$APP-latest&os=linux64"
+  fi
+  # Download with wget or wget2
+  if wget --version | head -1 | grep -q ' 1.'; then
+    wget -q --no-verbose --show-progress --progress=bar "$DOWNLOAD_URL" --trust-server-names || exit 1
+  else
+    wget "$DOWNLOAD_URL" --trust-server-names || exit 1
+  fi
+  APP_DIR="${APP}.AppDir"
+  # Disable automatic updates
+  mkdir -p "$APP".AppDir/distribution
+  echo "$POLICIES" >"$APP".AppDir/distribution/policies.json
 
-	# Check the version
-	VERSION=$(cat ./"$APP".AppDir/application.ini | grep "^Version=" | head -1 | cut -c 9-)
+  # Extract the archive
+  [ -e ./*tar.* ] && tar fx ./*tar.* && mv ./firefox/* "$APP".AppDir/ && rm -f ./*tar.* || exit 1
+  # Enter the AppDir
+  cd "$APP".AppDir || exit 1
+  cp $CONFIG_DIR/autoconfig.js defaults/pref
+  cp $CONFIG_DIR/firefox.cfg .
+  # Add the launcher and patch it depending on the release channel
+  echo "$LAUNCHER" >firefox.desktop
+  if [ "$CHANNEL" != stable ]; then
+    sed -i "s/Name=Firefox/Name=Firefox ${CHANNEL^}/g; s/StartupWMClass=firefox/StartupWMClass=firefox-$CHANNEL/g" firefox.desktop
+  fi
+  # Add the icon
+  cp ./browser/chrome/icons/default/default128.png firefox.png
+  cd .. || exit 1
 
-	# Create te AppRun
-	cat <<-'HEREDOC' >> ./"$APP".AppDir/AppRun
+  # Check the version
+  VERSION=$(cat ./"$APP".AppDir/application.ini | grep "^Version=" | head -1 | cut -c 9-)
+
+  # Create te AppRun
+  cat <<-'HEREDOC' >>./"$APP".AppDir/AppRun
 	#!/bin/sh
 	HERE="$(dirname "$(readlink -f "${0}")")"
 	export UNION_PRELOAD="${HERE}"
@@ -404,39 +409,15 @@ _create_firefox_appimage() {
 	export MOZ_APP_LAUNCHER="${APPIMAGE}"
 	exec "${HERE}"/firefox "$@"
 	HEREDOC
-	chmod a+x ./"$APP".AppDir/AppRun
+  chmod a+x ./"$APP".AppDir/AppRun
 
-	# Export the AppDir to an AppImage
-	ARCH=x86_64 ./appimagetool --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 20 \
-		-u "gh-releases-zsync|$GITHUB_REPOSITORY_OWNER|Firefox-appimage|continuous-$CHANNEL|*-$CHANNEL-*x86_64.AppImage.zsync" \
-		./"$APP".AppDir Firefox-"$CHANNEL"-"$VERSION"-x86_64.AppImage || exit 1
+  # Export the AppDir to an AppImage
+  ARCH=x86_64 ./appimagetool --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 20 \
+    -u "gh-releases-zsync|$GITHUB_REPOSITORY_OWNER|Firefox-appimage|continuous-$CHANNEL|*-$CHANNEL-*x86_64.AppImage.zsync" \
+    ./"$APP".AppDir Firefox-"$CHANNEL"-"$VERSION"-x86_64.AppImage || exit 1
 }
 
 CHANNEL="stable"
-mkdir -p "$CHANNEL" && cp ./appimagetool ./"$CHANNEL"/appimagetool && cd "$CHANNEL" || exit 1
-_create_firefox_appimage
-cd .. || exit 1
-mv ./"$CHANNEL"/*.AppImage* ./
-
-CHANNEL="esr"
-mkdir -p "$CHANNEL" && cp ./appimagetool ./"$CHANNEL"/appimagetool && cd "$CHANNEL" || exit 1
-_create_firefox_appimage
-cd .. || exit 1
-mv ./"$CHANNEL"/*.AppImage* ./
-
-CHANNEL="beta"
-mkdir -p "$CHANNEL" && cp ./appimagetool ./"$CHANNEL"/appimagetool && cd "$CHANNEL" || exit 1
-_create_firefox_appimage
-cd .. || exit 1
-mv ./"$CHANNEL"/*.AppImage* ./
-
-CHANNEL="devedition"
-mkdir -p "$CHANNEL" && cp ./appimagetool ./"$CHANNEL"/appimagetool && cd "$CHANNEL" || exit 1
-_create_firefox_appimage
-cd .. || exit 1
-mv ./"$CHANNEL"/*.AppImage* ./
-
-CHANNEL="nightly"
 mkdir -p "$CHANNEL" && cp ./appimagetool ./"$CHANNEL"/appimagetool && cd "$CHANNEL" || exit 1
 _create_firefox_appimage
 cd .. || exit 1
