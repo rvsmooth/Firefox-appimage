@@ -423,5 +423,29 @@ _create_firefox_appimage
 cd .. || exit 1
 mv ./"$CHANNEL"/*.AppImage* ./
 
+CHANNEL="esr"
+mkdir -p "$CHANNEL" && cp ./appimagetool ./"$CHANNEL"/appimagetool && cd "$CHANNEL" || exit 1
+_create_firefox_appimage
+cd .. || exit 1
+mv ./"$CHANNEL"/*.AppImage* ./
+
+CHANNEL="beta"
+mkdir -p "$CHANNEL" && cp ./appimagetool ./"$CHANNEL"/appimagetool && cd "$CHANNEL" || exit 1
+_create_firefox_appimage
+cd .. || exit 1
+mv ./"$CHANNEL"/*.AppImage* ./
+
+CHANNEL="devedition"
+mkdir -p "$CHANNEL" && cp ./appimagetool ./"$CHANNEL"/appimagetool && cd "$CHANNEL" || exit 1
+_create_firefox_appimage
+cd .. || exit 1
+mv ./"$CHANNEL"/*.AppImage* ./
+
+CHANNEL="nightly"
+mkdir -p "$CHANNEL" && cp ./appimagetool ./"$CHANNEL"/appimagetool && cd "$CHANNEL" || exit 1
+_create_firefox_appimage
+cd .. || exit 1
+mv ./"$CHANNEL"/*.AppImage* ./
+
 cd ..
 mv ./tmp/*.AppImage* ./
