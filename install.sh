@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 UPSTREAM_VERSION=$(curl https://raw.githubusercontent.com/rvsmooth/Firefox-appimage/refs/heads/main/latest-release.txt | awk -F '/' '{print $NF}' | awk -F '-' 'NR==1{print $3}')
 PKG=$(curl https://raw.githubusercontent.com/rvsmooth/Firefox-appimage/refs/heads/main/latest-release.txt | awk -F '/' 'NR==1{print $NF}')
+ICON_URL="https://raw.githubusercontent.com/rvsmooth/Firefox-appimage/refs/heads/main/firefox.png"
 BIN_DIR="$HOME/.local/bin"
 SHARE_APP="$HOME/.local/share/applications"
 
@@ -119,7 +120,7 @@ Keywords[vi]=Internet;WWW;Browser;Web;Explorer;Trình duyệt;Trang web;
 Keywords[zh_CN]=Internet;WWW;Browser;Web;Explorer;网页;浏览;上网;火狐;Firefox;ff;互联网;网站;;
 Keywords[zh_TW]=Internet;WWW;Browser;Web;Explorer;網際網路;網路;瀏覽器;上網;網頁;火狐;
 Exec=/home/$(whoami)/.local/bin/firefox %u
-Icon=firefox
+Icon=/home/$(whoami)/.local/share/applications/firefox.png
 Terminal=false
 X-MultipleArgs=false
 Type=Application
@@ -396,6 +397,8 @@ __install() {
     mv $PKG firefox $BIN_DIR/
     mkdir -p "$SHARE_APP"
     printf "%s\n" "$LAUNCHER" >$SHARE_APP/firefox.desktop
+    wget -qO firefox.png --show-progress -nc $ICON_URL
+    mv firefox.jpg $SHARE_APP/
 
   elif [[ $is_installed == "1" ]]; then
 
