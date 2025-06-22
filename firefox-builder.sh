@@ -385,8 +385,11 @@ _create_firefox_appimage() {
   [ -e ./*tar.* ] && tar fx ./*tar.* && mv ./firefox/* "$APP".AppDir/ && rm -f ./*tar.* || exit 1
   # Enter the AppDir
   cd "$APP".AppDir || exit 1
-  cp $CONFIG_DIR/autoconfig.js defaults/pref
-  cp $CONFIG_DIR/firefox.cfg .
+  # Add configs if channel is stable
+  if [[ "$CHANNEL" == "stable" ]]; then
+    cp $CONFIG_DIR/autoconfig.js defaults/pref
+    cp $CONFIG_DIR/firefox.cfg .
+  fi
   # Add the launcher and patch it depending on the release channel
   echo "$LAUNCHER" >firefox.desktop
   if [ "$CHANNEL" != stable ]; then
