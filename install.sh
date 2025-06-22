@@ -396,7 +396,7 @@ __install() {
     ln -s $PKG firefox
     mv $PKG firefox $BIN_DIR/
     mkdir -p "$SHARE_APP"
-    printf "%s\n" "$LAUNCHER" >$SHARE_APP/firefox.desktop
+    printf "%s\n" "$LAUNCHER" >$SHARE_APP/firefox.desktop 2>/dev/null
     wget -qO firefox.png --show-progress -nc $ICON_URL
     mv firefox.png $SHARE_APP/
 
