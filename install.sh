@@ -398,7 +398,7 @@ __install() {
     mkdir -p "$SHARE_APP"
     printf "%s\n" "$LAUNCHER" >$SHARE_APP/firefox.desktop
     wget -qO firefox.png --show-progress -nc $ICON_URL
-    mv firefox.jpg $SHARE_APP/
+    mv firefox.png $SHARE_APP/
 
   elif [[ $is_installed == "1" ]]; then
 
