@@ -386,6 +386,12 @@ __check_version() {
   fi
 }
 
+__create_launcher() {
+  wget -qO firefox.png -nc $ICON_URL
+  cp firefox.png $SHARE_APP/
+  mkdir -p "$SHARE_APP"
+  printf "%s\n" "$LAUNCHER" >$SHARE_APP/firefox.desktop 2>/dev/null
+}
 __install() {
   if [[ "$upgrade" == "0" ]]; then
     echo "Upgrading current firefox($LOCAL_VERSION) to $UPSTREAM_VERSION"
@@ -395,10 +401,6 @@ __install() {
     chmod +x $PKG
     ln -s $PKG firefox
     mv $PKG firefox $BIN_DIR/
-    mkdir -p "$SHARE_APP"
-    printf "%s\n" "$LAUNCHER" >$SHARE_APP/firefox.desktop 2>/dev/null
-    wget -qO firefox.png --show-progress -nc $ICON_URL
-    mv firefox.png $SHARE_APP/
 
   elif [[ $is_installed == "1" ]]; then
 
@@ -408,11 +410,10 @@ __install() {
     chmod +x $PKG
     ln -s $PKG firefox
     mv $PKG firefox $BIN_DIR/
-    mkdir -p "$SHARE_APP"
-    printf "%s\n" "$LAUNCHER" >$SHARE_APP/firefox.desktop
   fi
 }
 
 __check_if_installed
 __check_version
 __install
+__create_launcher
