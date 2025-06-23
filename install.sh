@@ -389,7 +389,6 @@ __check_version() {
 __create_launcher() {
   wget -qO firefox.png -nc $ICON_URL
   cp firefox.png $SHARE_APP/
-  mkdir -p "$SHARE_APP"
   printf "%s\n" "$LAUNCHER" >$SHARE_APP/firefox.desktop 2>/dev/null
 }
 __install() {
@@ -412,6 +411,9 @@ __install() {
     mv $PKG firefox $BIN_DIR/
   fi
 }
+
+[! -d "$BIN_DIR" ] && mkdir -p $BIN_DIR
+[! -d "$SHARE_APP" ] && mkdir -p $SHARE_APP
 
 __check_if_installed
 __check_version

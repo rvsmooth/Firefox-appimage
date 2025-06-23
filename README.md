@@ -16,3 +16,7 @@ To uninstall, run
 ```
 rm ~/.local/bin/{firefox,Firefox*.appimage}  ~/.local/share/applications/firefox.desktop}
 ```
+
+### To Do
+- [X] create .local/bin dir if does not exist
+- [X] create .local/share/applications if doesn't exist
