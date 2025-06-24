@@ -386,7 +386,7 @@ _create_firefox_appimage() {
   # Enter the AppDir
   cd "$APP".AppDir || exit 1
   # Add configs if channel is stable
-  if [[ "$CHANNEL" == "stable" ]]; then
+  if [[ "$CHANNEL" == "stable" || "$CHANNEL" == "esr" ]]; then
     cp $CONFIG_DIR/autoconfig.js defaults/pref
     cp $CONFIG_DIR/firefox.cfg .
   fi
